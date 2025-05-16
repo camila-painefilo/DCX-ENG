@@ -62,6 +62,14 @@ TIMEZONE = pytz.timezone('Asia/Seoul')
 
 # 데이터셋 매핑
 KEYWORD_COLUMNS = ['맛', '서비스', '가격', '위치', '분위기', '위생']
+KEYWORD_ENGLISH_MAP = {
+    '맛': 'Taste',
+    '서비스': 'Service',
+    '가격': 'Price',
+    '위치': 'Location',
+    '분위기': 'Atmosphere',
+    '위생': 'Hygiene'
+}
 DATASET_MAP = {
     '부산대': 'IBA-DCX_Analytics_2.0_PNU.csv',
     '경희대': 'IBA-DCX_Analytics_2.0_KHU.csv',
@@ -674,17 +682,17 @@ def render_sentiment_dashboard(df, store, classifier):
             '위생': 89.87
         }
     }
-    st.header(f"{st.session_state.get('selected_location', '')} - {store}: 고객만족도분석")
+    st.header(f"{st.session_state.get('selected_location', '')} - {store}: Customer Satisfaction Analysis")
     df_store = df[df['Name'] == store]
 
     if len(df_store) < 50:
-        st.warning("리뷰 수가 부족하여 감성분석을 실행할 수 없습니다.")
+        st.warning("Insufficient reviews to perform sentiment analysis.")
         return
 
     sentiment_key = f"sentiment_scores_{store}"
 
     if sentiment_key not in st.session_state:
-        if st.button("🧠 고객만족도 분석 시작하기"):
+        if st.button("🧠 Start Customer Satisfaction Analysis"):
             texts = df_store['review_sentences'].dropna().astype(str).tolist()
             keyword_inputs = {col: df_store[col].dropna().astype(str).tolist() for col in KEYWORD_COLUMNS}
             total_steps = len(texts) + sum(len(v) for v in keyword_inputs.values())
@@ -718,7 +726,7 @@ def render_sentiment_dashboard(df, store, classifier):
                 'keywords': keyword_scores
             }
         else:
-            st.info("📌 분석을 시작하려면 위 버튼을 눌러주세요.")
+            st.info("📌 Click the button above to start the analysis.")
             return
 
     # 결과 시각화
@@ -727,7 +735,7 @@ def render_sentiment_dashboard(df, store, classifier):
     sentiment_data = st.session_state[sentiment_key]
     
     # 종합 점수 비교
-    st.subheader("🔎 종합 감성 점수 비교")
+    st.subheader("🔎 Overall Sentiment Score Comparison")
     
     store_total = sentiment_data['total']
     region_total = region_stats.get('total', None)
@@ -736,7 +744,7 @@ def render_sentiment_dashboard(df, store, classifier):
         diff = store_total - region_total
         trend_icon = "▲" if diff > 0 else ("▼" if diff < 0 else "▶")
         trend_color = "green" if diff > 0 else ("crimson" if diff < 0 else "gray")
-        trend_text = f"{trend_icon} {abs(diff):.2f}점 차이"
+        trend_text = f"{trend_icon} {abs(diff):.2f} points difference"
     else:
         trend_text = "-"
         trend_color = "gray"
@@ -772,7 +780,7 @@ def render_sentiment_dashboard(df, store, classifier):
         </div>
         """, unsafe_allow_html=True)
 
-    st.subheader("🔎 키워드별 감성 점수 비교")
+    st.subheader("🔎 Keyword Sentiment Score Comparison")
     keyword_data = sentiment_data["keywords"]
     cols = st.columns(3)
     
@@ -796,8 +804,8 @@ def render_sentiment_dashboard(df, store, classifier):
             if store_score is None:
                 st.markdown(f"""
                     <div style="{box_style}">
-                        <div style="font-size:18px; font-weight:bold">{keyword}</div>
-                        <div style="font-size:16px; color:gray; margin-top:12px;">분석할 리뷰가 부족합니다</div>
+                        <div style="font-size:18px; font-weight:bold">{KEYWORD_ENGLISH_MAP[keyword]}</div>
+                        <div style="font-size:16px; color:gray; margin-top:12px;">Insufficient reviews for analysis</div>
                     </div>
                 """, unsafe_allow_html=True)
             else:
@@ -807,9 +815,9 @@ def render_sentiment_dashboard(df, store, classifier):
     
                 st.markdown(f"""
                     <div style="{box_style}">
-                        <div style="font-size:18px; font-weight:bold">{keyword}</div>
-                        <div style="font-size:28px; color:{color}">{store_score:.2f}점 {trend}</div>
-                        <div style="font-size:14px; color:gray">지역 평균: {region_score:.2f}점</div>
+                        <div style="font-size:18px; font-weight:bold">{KEYWORD_ENGLISH_MAP[keyword]}</div>
+                        <div style="font-size:28px; color:{color}">{store_score:.2f}Points {trend}</div>
+                        <div style="font-size:14px; color:gray">Regional Average: {region_score:.2f}Points</div>
                     </div>
                 """, unsafe_allow_html=True)
 
@@ -820,18 +828,18 @@ def render_sentiment_dashboard(df, store, classifier):
 
 # 사이드바
 st.sidebar.image("DCX_Tool.png", use_container_width=True)
-st.sidebar.title("지역 및 가게 선택")
+st.sidebar.title("Select Region and Store")
 
 if 'location_locked' not in st.session_state:
     st.session_state['location_locked'] = False
 
 if not st.session_state['location_locked']:
-    location = st.sidebar.selectbox("지역을 선택해주세요", [''] + list(DATASET_MAP.keys()), key="loc")
+    location = st.sidebar.selectbox("Please select a region", [''] + list(DATASET_MAP.keys()), key="loc")
     if location:
         df = load_dataset(DATASET_MAP[location])
         stores = df['Name'].value_counts().index.tolist()
-        store = st.sidebar.selectbox("가게 이름을 선택해주세요", [''] + stores, key="store")
-        if store and st.sidebar.button("✅지역/가게 확정"):
+        store = st.sidebar.selectbox("Plase select a store", [''] + stores, key="store")
+        if store and st.sidebar.button("✅Region/Store Selection Finalized"):
             st.session_state.update({
                 'location_locked': True,
                 'selected_location': location,
@@ -840,17 +848,17 @@ if not st.session_state['location_locked']:
 else:
     location = st.session_state.get('selected_location')
     store = st.session_state.get('selected_store')
-    st.sidebar.markdown(f"🔒 지역: {location}\n\n🔒 가게: {store}")
+    st.sidebar.markdown(f"🔒 Region: {location}\n\n🔒 Store: {store}")
     df = load_dataset(DATASET_MAP[location])
 
 st.sidebar.markdown("""
-## **본 DCX 분석도구는 다음과 같은 경우에만 사용이 허가됩니다.**
-* 대학 등 수업에서 학생교육과 연구를 위한 경우
-* 소상공인이 본인의 사업을 위해서 사용하는 경우
-* 대학생/대학원생이 지역 소상공인에게 경영전략을 제공하기 위한 지역사회에 대한 봉사활동의 일부로 비영리목적의 사용하는 경우
+## **This DCX analysis tool is only permitted for use in the following cases:**
+* When used in educational settings such as universities for student education and research
+* When used by small business owners for their own business purposes
+* When used by university or graduate students as part of nonprofit community service activities to provide business strategies to local small business owners
 
 <span style="color:red; font-weight:bold">
-위 경우를 제외하고 본 분석도구를 이용하여 일체의 영리활동과 분석정보의 재활용을 금지합니다.
+Except for the cases above, any commercial use of this analysis tool and reuse of the analysis data is strictly prohibited.
 </span>
 <br>
 <br>
@@ -859,7 +867,7 @@ st.sidebar.markdown("""
 
 st.sidebar.markdown("""
 <div style="text-align:center; font-size:16px; font-weight:bold; margin-bottom:10px;">
-📬 문의 & 정보
+📬 Inquiries & Information
 </div>
 
 <a href="mailto:peter@pusan.ac.kr">
@@ -873,7 +881,7 @@ st.sidebar.markdown("""
         width:100%;
         margin-bottom:8px;
         cursor:pointer;">
-        📧 메일로 문의하기
+        📧 Contact via Email
     </button>
 </a>
 
@@ -887,22 +895,22 @@ st.sidebar.markdown("""
         font-size:14px;
         width:100%;
         cursor:pointer;">
-        🌐 IBA LAB 홈페이지
+        🌐 IBA LAB Homepage
     </button>
 </a>
 """, unsafe_allow_html=True)
 
 
 # 탭 설정
-TABS = ["사용법", "사진 및 리뷰", "워드클라우드", "트리맵", "네트워크분석", "토픽모델링", "고객만족도분석"]
+TABS = ["How to Use", "Photos & Reviews", "Word Cloud", "Treemap", "Network Analysis", "Topic Modeling", "Customer Satisfaction Analysis"]
 
 if 'current_tab' not in st.session_state:
-    st.session_state['current_tab'] = "사용법"
+    st.session_state['current_tab'] = "How to Use"
 
 # 색상 강제 적용: selectbox 라벨과 warning 텍스트
 st.markdown("""
 <style>
-/* selectbox 라벨 텍스트 색상 고정 */
+/* Fix the selectbox label text color */
 label[for^=""] {
     color: black !important;
     font-weight: 600;
@@ -916,7 +924,7 @@ div[data-testid="stMarkdownContainer"] p {
 """, unsafe_allow_html=True)
 
 if st.session_state.get("location_locked", False):
-    selected_tab = st.selectbox("✅ 기능을 선택하세요", TABS)
+    selected_tab = st.selectbox("✅ Please select a feature", TABS)
     if st.session_state['current_tab'] != selected_tab:
         keys_to_clear = [
             key for key in st.session_state.keys()
@@ -937,23 +945,23 @@ if st.session_state.get("location_locked", False):
         gc.collect()
         st.session_state['current_tab'] = selected_tab
 else:
-    selected_tab = "사용법"
-    st.warning("⚠️ 먼저 지역과 가게를 선택하고 '확정'을 눌러야 기능이 활성화됩니다.")
+    selected_tab = "How to Use"
+    st.warning("⚠️ Please select the region and store first, then press 'Confirm' to activate the functions.")
 
 
 # 탭별 기능 실행
-if selected_tab == "사용법":
+if selected_tab == "How to Use":
     render_usage_tab()
-elif selected_tab == "사진 및 리뷰":
+elif selected_tab == "Photos & Reviews":
     render_review_tab(df, store)
-elif selected_tab == "워드클라우드":
+elif selected_tab == "Word Cloud":
     render_wordcloud_tab(df, store)
-elif selected_tab == "트리맵":
+elif selected_tab == "Treemap":
     render_treemap_tab(df, store)
-elif selected_tab == "네트워크분석":
+elif selected_tab == "Network Analysis":
     render_network_tab(df, store)
-elif selected_tab == "토픽모델링":
+elif selected_tab == "Topic Modeling":
     render_topic_tab(df, store)
-elif selected_tab == "고객만족도분석":
+elif selected_tab == "Customer Satisfaction Analysis":
     classifier = get_classifier()
     render_sentiment_dashboard(df, store, classifier)
