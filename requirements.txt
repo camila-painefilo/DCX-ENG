@@ -1,0 +1,15 @@
+streamlit
+pyLDAvis==3.4.1
+networkx
+matplotlib==3.7.1
+wordcloud==1.9.2
+squarify
+gdown
+transformers==4.39.3
+torch==2.1.0
+torchvision==0.16.0
+torchaudio==2.1.0
+gensim
+scipy==1.10.1
+gspread
+oauth2client
