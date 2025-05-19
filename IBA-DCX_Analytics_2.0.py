@@ -435,7 +435,7 @@ def vivid_color_func(*args, **kwargs):
 
 # 워드클라우드 탭 렌더링 함수
 def render_wordcloud_tab(df, store):
-    st.header(f"{st.session_state.get('selected_location', '')} - {store}: 워드클라우드")
+    st.header(f"{st.session_state.get('selected_location', '')} - {store}: Wordcloud")
     df_store = df[df['Name'] == store]
     df_store['Tokens'] = df_store['Tokens'].fillna('').map(str).map(clean_tokens)
 
