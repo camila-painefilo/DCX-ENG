@@ -76,6 +76,13 @@ DATASET_MAP = {
     '제주도': 'IBA-DCX_Analytics_2.0_Jeju.csv'
 }
 
+# Location English Mapping
+LOCATION_ENGLISH_MAP = {
+    '부산대': 'Pusan National University',
+    '경희대': 'Kyung Hee University',
+    '제주도': 'Jeju Island'
+}
+
 
 ###############################################
 # 리소스 관리
@@ -331,30 +338,30 @@ def render_usage_tab():
         본 도구를 이용하여 아래와 같은 기능을 실행할 수 있습니다.
         </p>
         <ul style="padding-left: 20px; font-size:15px; line-height: 1.6;">
-            <li>워드클라우드 생성</li>
-            <li>트리맵 차트 생성</li>
-            <li>빈도 기반 네트워크 분석</li>
-            <li>LDA 토픽 모델링</li>
-            <li>리뷰 감성분석 기반 고객만족도 분석</li>
+            <li>Word Cloud Generation</li>
+            <li>Treemap Chart Creation</li>
+            <li>Frequency-Based Network Analysis</li>
+            <li>LDA Topic Modeling</li>
+            <li>Customer Satisfaction Analysis via Sentiment Analysis</li>
         </ul>
     </div>
     <br>
     <br>
     """, unsafe_allow_html=True)
 
-    st.markdown("### ✅ 사용 방법")
+    st.markdown("### ✅ How to Use")
 
     st.markdown("""
     <div style="padding: 16px; background-color: #f9f9f9; border-radius: 10px; font-size: 15px; line-height: 1.7;">
         <ol>
-            <li><strong>사이드바</strong>에서 <span style="color:#0d6efd;">지역</span>과 <span style="color:#0d6efd;">가게 이름</span>을 선택한 뒤 <strong>‘확정’</strong> 버튼을 누릅니다.</li>
-            <li><strong>기능 선택 드롭다운</strong>에서 원하는 분석 항목을 선택합니다.</li>
-            <li>새로운 분석을 원할 경우 <strong>페이지 새로고침</strong> 후 재시작합니다.</li>
-            <li><strong>감성분석</strong>의 경우, 리뷰 수에 따라 <span style="color:red;">시간이 오래 걸릴 수 있습니다.</span></li>
-            <li>본 도구는 <strong>Light Mode</strong>를 기준으로 제작되었습니다. 우측상단의 메뉴(⋮)에서 테마 변경이 가능합니다. </span></li>
+            <li>In the <strong>sidebar</strong>, select a <span style="color:#0d6efd;">location</span> and <span style="color:#0d6efd;">store name</span>, then click the <strong>‘Confirm’</strong> button.</li>
+            <li>Choose the desired analysis function from the <strong>function selection dropdown</strong>.</li>
+            <li>To start a new analysis, <strong>refresh the page</strong> and begin again.</li>
+            <li><strong>Sentiment analysis</strong> may take longer depending on the number of reviews.</li>
+            <li>This tool is designed for <strong>Light Mode</strong>. You can change the theme via the menu (⋮) in the top-right corner.</li>
         </ol>
         <p style="font-size:14px; color:gray;">
-        ⚠️ 도중에 문제가 발생하면 사이드바에 안내된 메일 주소로 문의 바랍니다.
+        ⚠️ If you encounter issues, please contact the email address provided in the sidebar.
         </p>
     </div>
     """, unsafe_allow_html=True)
@@ -682,7 +689,7 @@ def render_sentiment_dashboard(df, store, classifier):
             '위생': 89.87
         }
     }
-    st.header(f"{st.session_state.get('selected_location', '')} - {store}: Customer Satisfaction Analysis")
+    st.header(f"{LOCATION_ENGLISH_MAP.get('selected_location', '')} - {store}: Customer Satisfaction Analysis")
     df_store = df[df['Name'] == store]
 
     if len(df_store) < 50:
