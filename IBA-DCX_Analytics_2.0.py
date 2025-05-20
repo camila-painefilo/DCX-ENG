@@ -95,9 +95,9 @@ def get_classifier():
 def load_dataset(dataset_name: str) -> pd.DataFrame:
     import gdown
     file_ids = {
-        'IBA-DCX_Analytics_2.0_PNU.csv': '1Q1mj-t-eLfDxzW9TOFQRgDS2BM0Uo9ee',
-        'IBA-DCX_Analytics_2.0_KHU.csv': '12ITvc7YRRzbkTZ9GzrgwSJUXtZLTH16c',
-        'IBA-DCX_Analytics_2.0_Jeju.csv': '1qhhhspILa3YhJGpuD-2xYcNSyRkm2AxX'
+        'IBA-DCX_Analytics_2.0_PNU.csv': '1jfMMwnXi5zUOGE6F34B-KjQvfH5jjKmu',
+        'IBA-DCX_Analytics_2.0_KHU.csv': '1pqbNRLg8SdsmnZgi9JnqkxjDp7VUPlb4',
+        'IBA-DCX_Analytics_2.0_Jeju.csv': '1OeB_VE4bWYCLFAI85ozT7DwiL8V1W7yR'
     }
     file_id = file_ids.get(dataset_name)
     output = f".cache_{dataset_name}"
