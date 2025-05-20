@@ -117,8 +117,8 @@ def get_lda_vis_data(_model, corpus, _dictionary):
 ###############################################
 
 # 구글시트 설정
-SERVICE_ACCOUNT_FILE = "tz250212-7b57e361fadc.json"
-SPREADSHEET_ID = "1B8RppQUVF0I3sD-YXVTq5bgPRj4PaiklComiOoAY7hU"
+SERVICE_ACCOUNT_FILE = "dcx-tool-credentials.json"
+SPREADSHEET_ID = "16ZU-AypnTli-BlXa2Tgvooe4YKsd0T1NqC3nZWsig_E"
 SHEET_NAME = "DCX"
 TIMEZONE = pytz.timezone('Asia/Seoul')
 
