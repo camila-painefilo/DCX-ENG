@@ -388,10 +388,10 @@ def render_review_tab(df, store):
     with col1:
         st.metric("Total number of Reviews", f"{len(df_store)} reviews")
     with col2:
-        st.metric("Total number of Images", f"{len(all_links)}images")
+        st.metric("Total number of Images", f"{len(all_links)} images")
     with col3:
         st.metric("Average Review Length", f"{avg_length:.1f}")
-    highlight_keywords = ['Taste', 'Service', 'Price', 'Location', 'Atmosphere', 'Hygiene']
+    highlight_keywords = ['맛', '서비스', '가격', '위치', '분의기', '위생']
     def highlight_keywords_in_text(text):
         for kw in highlight_keywords:
             text = re.sub(f"({kw})", r"<span style='color:#d9480f; font-weight:bold;'>\1</span>", text)
@@ -401,7 +401,7 @@ def render_review_tab(df, store):
     NUM_CARDS = 6
     if 'review_indices' not in st.session_state:
         st.session_state.review_indices = random.sample(range(len(all_links)), min(NUM_CARDS, len(all_links)))
-    if st.button("🔄 다른 리뷰 보기"):
+    if st.button("🔄 Look at other reviews"):
         st.session_state.review_indices = random.sample(range(len(all_links)), min(NUM_CARDS, len(all_links)))
     for row_start in range(0, len(st.session_state.review_indices), 3):
         row_cols = st.columns(3)
@@ -540,7 +540,7 @@ def render_treemap_tab(df, store):
 
 #네트워크 분석
 def render_network_tab(df, store):
-    st.header(f"{st.session_state.get('selected_location', '')} - {store}: 네트워크분석")
+    st.header(f"{st.session_state.get('selected_location', '')} - {store}: Network Analysis")
     df_store = df[df['Name'] == store]
 
     if len(df_store) < 20:
@@ -586,7 +586,7 @@ def render_network_tab(df, store):
     G.remove_nodes_from(list(nx.isolates(G)))
 
     if G.number_of_nodes() == 0:
-        st.warning("조건에 맞는 네트워크가 없습니다. 필터 기준을 낮춰보세요.")
+        st.warning("In this condition, there is no matching network. Please, follow the filter's criteria.")
         return
 
     pos = nx.spring_layout(G, k=0.5, seed=42)
@@ -631,11 +631,11 @@ def render_network_tab(df, store):
 
 # 토픽모델링
 def render_topic_tab(df, store):
-    st.header(f"{st.session_state.get('selected_location', '')} - {store}: 토픽모델링")
+    st.header(f"{st.session_state.get('selected_location', '')} - {store}: Topic Modeling")
     df_store = df[df['Name'] == store]
     df_store['Tokens'] = df_store['Tokens'].fillna('').map(str).map(clean_tokens)
     if len(df_store) < 50:
-        st.warning("리뷰 수가 부족하여 토픽 모델링을 실행할 수 없습니다.")
+        st.warning("Not enough reviews to run topic modeling.")
         return
 
     df_store['Tokens'] = df_store['Tokens'].fillna('').map(str).map(str.split)
@@ -645,7 +645,7 @@ def render_topic_tab(df, store):
     dictionary = corpora.Dictionary(df_store['Tokens'])
     corpus = [dictionary.doc2bow(text) for text in df_store['Tokens']]
 
-    if st.button("토픽 모델링 실행하기"):
+    if st.button("Execute Topic Modeling"):
         lda_model = train_lda_model(corpus, dictionary)
         vis_data = get_lda_vis_data(lda_model, corpus, dictionary)
         with tempfile.NamedTemporaryFile("w+", delete=False, suffix=".html") as f:
