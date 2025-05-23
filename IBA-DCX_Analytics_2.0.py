@@ -222,7 +222,7 @@ if 'queue_checked' not in st.session_state:
         else:
             wait_sec = (len(user_ids) - MAX_USERS + 1) * TIMEOUT_MINUTES * 60
             m, s = divmod(wait_sec, 60)
-            st.error(f"현재 사용자가 가득 찼습니다. 예상 대기시간: {m}분")
+            st.error(f"The maximum number of users has been reached. Estimated waiting time: {m}분")
             st.stop()
     else:
         st.session_state['queue_checked'] = True
@@ -242,14 +242,14 @@ if now >= expiration_time:
     for key in list(st.session_state.keys()):
         del st.session_state[key]
 
-    st.sidebar.warning("⏰ 사용시간이 만료되었습니다. 다시 접속해주세요.")
+    st.sidebar.warning("⏰ Your usage time has ended. Please reconnect.")
     st.stop()
 
 else:
     expiration_str = expiration_time.strftime("%Y-%m-%d %H:%M:%S")
-    st.sidebar.success(f"⏳ 사용 만료 예정 시각: {expiration_str}")
+    st.sidebar.success(f"⏳ Your expiration time: {expiration_str}")
 
-if st.sidebar.button("✅ 사용 종료하기"):
+if st.sidebar.button("✅ To End Use"):
     user_id = st.session_state.get('user_id')
 
     ws = get_worksheet()
@@ -269,7 +269,7 @@ if st.sidebar.button("✅ 사용 종료하기"):
     for key in list(st.session_state.keys()):
         del st.session_state[key]
 
-    st.success("✅ 정상적으로 사용 종료되었습니다.")
+    st.success("✅ The Usage has normally ended.")
     st.stop()
 
 
@@ -383,21 +383,21 @@ def render_review_tab(df, store):
             all_reviews.extend([reviews[idx]] * len(links))
 
     avg_length = np.mean([len(r) for r in reviews if isinstance(r, str)]) if reviews else 0
-    st.markdown("### 📊 리뷰 지표")
+    st.markdown("### 📊 Review Indicators")
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.metric("총 리뷰 수", f"{len(df_store)}개")
+        st.metric("Total number of Reviews", f"{len(df_store)} reviews")
     with col2:
-        st.metric("총 이미지 수", f"{len(all_links)}장")
+        st.metric("Total number of Images", f"{len(all_links)}images")
     with col3:
-        st.metric("평균 리뷰 길이", f"{avg_length:.1f}자")
-    highlight_keywords = ['맛', '서비스', '가격', '위치', '분위기', '위생']
+        st.metric("Average Review Length", f"{avg_length:.1f}")
+    highlight_keywords = ['Taste', 'Service', 'Price', 'Location', 'Atmosphere', 'Hygiene']
     def highlight_keywords_in_text(text):
         for kw in highlight_keywords:
             text = re.sub(f"({kw})", r"<span style='color:#d9480f; font-weight:bold;'>\1</span>", text)
         return text
 
-    st.markdown("### 🖼️ 대표 리뷰")
+    st.markdown("### Top Review 🖼️ ")
     NUM_CARDS = 6
     if 'review_indices' not in st.session_state:
         st.session_state.review_indices = random.sample(range(len(all_links)), min(NUM_CARDS, len(all_links)))
@@ -530,7 +530,7 @@ def render_treemap_tab(df, store):
                 </div>
                 """, unsafe_allow_html=True)
 
-    with st.expander("📘 색상 설명"):
+    with st.expander("📘 Color Description"):
         st.markdown("""
         - 트리맵의 **색상은 해당 단어의 상대적 등장 빈도**를 의미합니다.  
         - **진한 파랑색**일수록 많이 언급된 단어입니다.  
@@ -554,7 +554,7 @@ def render_network_tab(df, store):
     
     df_store['Tokens'] = df_store['Tokens'].fillna('').map(str).map(clean_tokens)
 
-    st.subheader("단어 필터 기준 설정")
+    st.subheader("Setting the Word Filter Criteria")
     total_reviews = len(df_store)
     min_value = max(1, total_reviews // 20)
     max_value = max(2, total_reviews // 10)
@@ -621,11 +621,11 @@ def render_network_tab(df, store):
     st.pyplot(fig)
     plt.close(fig)
 
-    with st.expander("🌈 색상 기준"):
+    with st.expander("🌈 Color Criteria"):
         st.markdown("""
-        - 🟢 **Green**: 단어 등장 빈도 상위 30%  
-        - 🔴 **Red**: 단어 등장 빈도 하위 30%  
-        - 🔵 **Blue**: 중간 빈도 단어
+        - 🟢 **Green**: High Frequency words 30%  
+        - 🔴 **Red**: Low Frequency words 30%  
+        - 🔵 **Blue**: Medium Frequency words
         """)
 
 
