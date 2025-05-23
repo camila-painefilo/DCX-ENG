@@ -13,3 +13,4 @@ gensim
 scipy==1.10.1
 gspread
 oauth2client
+pandas
