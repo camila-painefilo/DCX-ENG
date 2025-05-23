@@ -516,7 +516,7 @@ def render_treemap_tab(df, store):
                 </div>
                 """, unsafe_allow_html=True)
 
-    with st.expander("📘 Color Description"):
+    with st.expander("📘 Color Descriptions"):
         st.markdown("""
         - The **color of the treemap represents the relative frequency** of the word.  
         - **Dark blue** indicates a more frequently mentioned word.  
