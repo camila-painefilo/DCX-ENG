@@ -11,8 +11,9 @@ transformers==4.45.2
 torch==2.6.0
 torchvision==0.21.0
 torchaudio==2.6.0
-gensim
+gensim==4.3.2
 scipy==1.10.1
-gspread
+gspread==6.1.2
 oauth2client
-google-auth
+google-auth==2.35.0
+google-auth-oauthlib==1.2.1
