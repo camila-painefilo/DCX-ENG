@@ -121,7 +121,7 @@ TIMEZONE = pytz.timezone('Asia/Seoul')
 @st.cache_resource
 def get_worksheet():
     creds = Credentials.from_service_account_file(
-        SERVICE_ACCOUNT_FILE,
+        st.secrets["gcp_service_account"],
         scopes=["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
     )
     client = gspread.authorize(creds)
