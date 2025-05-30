@@ -1,11 +1,13 @@
 streamlit
+pandas
+numpy
 pyLDAvis==3.4.1
 networkx
-matplotlib==3.7.1
-wordcloud==1.9.2
+matplotlib
+wordcloud
 squarify
 gdown
-transformers==4.39.3
+transformers
 torch==2.1.0
 torchvision==0.16.0
 torchaudio==2.1.0
@@ -14,3 +16,4 @@ scipy==1.10.1
 gspread
 oauth2client
 pandas
+google-auth
