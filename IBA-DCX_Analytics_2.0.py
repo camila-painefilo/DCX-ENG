@@ -120,7 +120,7 @@ TIMEZONE = pytz.timezone('Asia/Seoul')
 # Google Sheets queue setup
 @st.cache_resource
 def get_worksheet():
-    creds = Credentials.from_service_account_file(
+    creds = Credentials.from_service_account_info(
         st.secrets["gcp_service_account"],
         scopes=["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
     )
