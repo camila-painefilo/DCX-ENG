@@ -10,7 +10,7 @@ gdown==5.2.0
 transformers==4.45.2
 torch==2.6.0
 torchvision==0.21.0
-gensim==4.3.0
+gensim
 scipy==1.13.1
 gspread==6.1.2
 oauth2client==4.1.3
