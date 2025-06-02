@@ -175,7 +175,7 @@ def clean_expired_sessions():
 
     ws.clear()
     time.sleep(1)
-    ws.update('A1:B' + str(len(final_data)), final_data)
+    ws.update(range_name='A1:B' + str(len(final_data)), values=final_data)
     time.sleep(1)
 
     st.cache_data.clear()
