@@ -112,7 +112,6 @@ def get_lda_vis_data(_model, corpus, _dictionary):
 ###############################################
 
 # Google Sheets setup
-SERVICE_ACCOUNT_FILE = "dcx-tool-credentials.json"
 SPREADSHEET_ID = "16ZU-AypnTli-BlXa2Tgvooe4YKsd0T1NqC3nZWsig_E"
 SHEET_NAME = "DCX"
 TIMEZONE = pytz.timezone('Asia/Seoul')
