@@ -1,3 +1,9 @@
+import subprocess
+import sys
+
+# Uninstall hf-xet if it exists
+subprocess.run([sys.executable, "-m", "pip", "uninstall", "-y", "hf-xet"], check=False)
+
 import streamlit as st
 import pandas as pd
 import numpy as np
